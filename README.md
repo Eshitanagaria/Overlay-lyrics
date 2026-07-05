@@ -143,6 +143,8 @@ Issues and PRs are welcome. A few directions worth exploring:
 
 - [Eshita](https://github.com/Eshitanagaria) — project author
 - [Nandinee](https://github.com/TheNandinee) — macOS packaging
+- [Aashi Garg](https://github.com/AashiGarg-tech) — security review, event listener cleanup, regex improvements
+
 
 ---
 
