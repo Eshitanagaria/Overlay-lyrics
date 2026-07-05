@@ -1,6 +1,7 @@
 let settings = null;
 let lastPayload = null;
 let renderedSlotCount = 0;
+let nowPlayingUnsubscriber = null; // Global tracker for event listener cleanup
 
 const lyricsContainer = document.getElementById('lyrics-container');
 const nowPlayingLabel = document.getElementById('now-playing-label');
@@ -224,7 +225,11 @@ async function init() {
   const spStatus = await window.api.getSpotifyStatus();
   document.getElementById('spotifyStatus').textContent = spStatus.connected ? 'Connected ✅' : '';
 
-  window.api.onNowPlaying(handleNowPlaying);
+  // Clean up any stale subscription before registering a new one
+  if (nowPlayingUnsubscriber) {
+    nowPlayingUnsubscriber();
+  }
+  nowPlayingUnsubscriber = window.api.onNowPlaying(handleNowPlaying);
 }
 
 init();
