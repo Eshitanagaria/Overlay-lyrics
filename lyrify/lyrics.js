@@ -1,10 +1,10 @@
 const USER_AGENT = 'EshaLyricsOverlay/1.0 (+personal desktop project)';
 
 function parseLRC(lrcText) {
-  const re = /\[(\d{1,2}):(\d{2}(?:\.\d{1,3})?)\]\s*(.*)/;
+  const re = /^\[(\d{1,2}):(\d{2}(?:\.\d{1,3})?)\](.*)/;
   const lines = [];
   for (const raw of lrcText.split('\n')) {
-    const m = raw.match(re);
+    const m = raw.trim().match(re);
     if (!m) continue;
     const min = parseInt(m[1], 10);
     const sec = parseFloat(m[2]);
