@@ -39,7 +39,10 @@ function startLogin(clientId) {
     // If a previous attempt never completed, its server is still holding
     // the port open — close it before starting a fresh one.
     if (pendingServer) {
-      try { pendingServer.close(); } catch { /* ignore */ }
+      try {
+        if (typeof pendingServer.closeAllConnections === 'function') pendingServer.closeAllConnections();
+        pendingServer.close();
+      } catch { /* ignore */ }
       pendingServer = null;
     }
 
@@ -68,6 +71,7 @@ function startLogin(clientId) {
       if (err || !code || returnedState !== state) {
         res.end('<html><body style="font-family:sans-serif;padding:40px"><h2>Spotify login failed.</h2><p>You can close this tab and try again.</p></body></html>');
         pendingServer = null;
+        if (typeof server.closeAllConnections === 'function') server.closeAllConnections();
         server.close();
         reject(new Error(err || 'Spotify auth failed or state mismatch'));
         return;
@@ -75,6 +79,7 @@ function startLogin(clientId) {
 
       res.end('<html><body style="font-family:sans-serif;padding:40px"><h2>Spotify connected ✅</h2><p>You can close this tab and go back to the overlay app.</p></body></html>');
       pendingServer = null;
+      if (typeof server.closeAllConnections === 'function') server.closeAllConnections();
       server.close();
       exchangeCode(clientId, code, verifier).then(resolve).catch(reject);
     });
@@ -102,6 +107,7 @@ function startLogin(clientId) {
     setTimeout(() => {
       if (pendingServer === server) {
         pendingServer = null;
+        if (typeof server.closeAllConnections === 'function') server.closeAllConnections();
         server.close();
       }
     }, 5 * 60 * 1000);
